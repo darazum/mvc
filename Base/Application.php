@@ -43,15 +43,42 @@ class Base_Application
             // получаем от диспетчера имя вызванного экшена
             $action = $dispatcher->getActionName();
 
+            // проверяем существование метода
+            if (!method_exists($controller, $action)) {
+                throw new Exception(
+                    'Action ' . $action . ' not found in controller '
+                    . $this->_request->getRequestController()
+                );
+            }
+
+
+            // создаем view
+            $view = new Base_View($this->_getDefaultTemplatePath());
+
+            // передаем созданный объект view в контроллер (теперь мы из контроллера можем им управлять)
+            $controller->view = $view;
+
             // вызываем экшен
             $controller->$action();
 
+            // рендерим контент
+            $content = $view->render($controller->tpl);
 
+            echo $content;
 
         } catch (Exception $e) {
             echo 'Произошло исключение: ' . $e->getMessage();
             // обработка исключений самого базового уровня - редирект на 404.html
         }
+    }
+
+    private function _getDefaultTemplatePath()
+    {
+        return ucfirst($this->_request->getRequestModule())
+            . DIRECTORY_SEPARATOR
+            . 'Templates'
+            . DIRECTORY_SEPARATOR
+            . ucfirst($this->_request->getRequestController());
     }
 
 }

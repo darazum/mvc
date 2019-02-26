@@ -9,7 +9,5 @@ class Main_Controller_Index extends Base_Controller_Abstract
         echo 'Запрошенный модуль: ' . $context->getRequest()->getRequestModule() . '<br>';
         echo 'Запрошенный контроллер: ' . $context->getRequest()->getRequestController() . '<br>';
         echo 'Запрошенный экшен: ' . $context->getRequest()->getRequestAction() . '<br><br><br>';
-
-
     }
 }
